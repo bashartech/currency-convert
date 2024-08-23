@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #f7b42c, #fc575e);
+      color: #333;
+      padding: 30px;
+    }
+
+    .label {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    .label label {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #555;
+      cursor: pointer;
+      position: relative;
+      padding-left: 30px;
+      transition: color 0.3s ease;
+    }
+
+    .label label:hover {
+      color: #fc575e;
+    }
+
+    
+
+    .label input[type="checkbox"] + label:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #f7b42c;
+      border-radius: 4px;
+      background: #fff;
+      transition: border-color 0.3s ease;
+    }
+
+    .label input[type="checkbox"]:checked + label:before {
+      background: linear-gradient(45deg, #f7b42c, #fc575e);
+      border-color: #fc575e;
+    }
+
+    .label input[type="checkbox"]:checked + label:after {
+      content: '✓';
+      position: absolute;
+      left: 4px;
+      top: 0px;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    .label input[type="checkbox"]:focus + label:before {
+      box-shadow: 0 0 3px 2px rgba(252, 87, 94, 0.6);
+    }
+    .amount{
+    text-align: center;
+
+  }
+  .amount input{
+   height: 40px;
+   border-radius: 5px;
+   background: black;
+   border: 2px solid black;
+   color: rgb(247, 246, 246);
+   
+  }
+  .amount input:hover{
+    box-shadow: 2px 2px 10px 2px rgb(4, 4, 4);
+    background-color: #fff;
+    color: #fc575e;
+  }
+  .amount input::placeholder{
+    color: rgb(251, 249, 249);
+    font-weight: 100;
+font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+text-align: center;
+
+}
+
+ .btn {
+    height: 50px;
+   cursor: pointer;
+    text-align: center;
+}
+button{
+    cursor: pointer;
+    margin-bottom: 20px;
+    background:transparent;
+    border: 2px solid black;
+    color: white;
+    font-size: 20px;
+    width: 400px;
+    height: 40px;
+    margin-top: 20px;
+    border-radius: 20px;
+} 
+button:hover{
+    background-color: #f0eded;
+    color: #fc575e;
+}
+  
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #f7b42c, #fc575e);
+      color: #333;
+      padding: 30px;
+    }
+    .label, .amount {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+    .label label, .amount h1 {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #555;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .amount input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Section 1 -->
+  <div class="label">
+    <h3>From Currency</h3>
+    <label><input type="checkbox" name="CurrencyFrom1" data-value="1" />USD</label>
+    <label><input type="checkbox" name="CurrencyFrom1" data-value="0.95" />EURO</label>
+    <label><input type="checkbox" name="CurrencyFrom1" data-value="282" />PKR</label>
+    <label><input type="checkbox" name="CurrencyFrom1" data-value="74" />IND</label>
+    <label><input type="checkbox" name="CurrencyFrom1" data-value="3.7" />DIRHAM</label>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="label">
+    <h3>To Currency</h3>
+    <label><input type="checkbox" name="CurrencyFrom2" data-value="1" />USD</label>
+    <label><input type="checkbox" name="CurrencyFrom2" data-value="0.95" />EURO</label>
+    <label><input type="checkbox" name="CurrencyFrom2" data-value="282" />PKR</label>
+    <label><input type="checkbox" name="CurrencyFrom2" data-value="74" />IND</label>
+    <label><input type="checkbox" name="CurrencyFrom2" data-value="3.7" />DIRHAM</label>
+  </div>
+
+  <div class="amount">
+    <h1>Enter Your Amount</h1><br>
+    <input type="text" id="amount" placeholder="Enter amount..." /><br>
+  </div>
+  
+  <button onclick="convertCurrency()">Convert</button>
+  <p id="result"></p>
+
+  <script>
+    function setupCheckboxGroup(groupName) {
+      const checkboxes = document.querySelectorAll(`input[name="${groupName}"]`);
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          if (this.checked) {
+            checkboxes.forEach(cb => {
+              if (cb !== this) cb.checked = false;
+            });
+          }
+        });
+      });
+    }
+
+    // Setup both checkbox groups
+    setupCheckboxGroup('CurrencyFrom1');
+    setupCheckboxGroup('CurrencyFrom2');
+
+    function convertCurrency() {
+      const fromCurrency = getSelectedValue('CurrencyFrom1');
+      const toCurrency = getSelectedValue('CurrencyFrom2');
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (fromCurrency && toCurrency && !isNaN(amount)) {
+        const convertedAmount = (amount / fromCurrency) * toCurrency;
+        document.getElementById('result').textContent = `Converted Amount: ${convertedAmount.toFixed(2)}`;
+      } else {
+        document.getElementById('result').textContent = 'Please select both currencies and enter a valid amount.';
+      }
+    }
+
+    function getSelectedValue(groupName) {
+      const checkboxes = document.querySelectorAll(`input[name="${groupName}"]`);
+      for (const checkbox of checkboxes) {
+        if (checkbox.checked) {
+          return parseFloat(checkbox.dataset.value);
+        }
+      }
+      return null;
+    }
+  </script>
+</body>
+</html>
